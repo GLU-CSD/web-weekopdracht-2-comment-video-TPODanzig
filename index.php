@@ -37,6 +37,27 @@ if(!empty($_POST)){
 ?>
 <!DOCTYPE html>
 <html lang="en">
+<?php
+    //$conn = mysqli_connect("localhost", "root", "mydb");
+    if (!$conn) {
+        die("Connection failed: " . mysqli_connect_error());
+    }
+
+    if(isset($_POST["submit"])){
+        $name = $_POST["name"];
+        $email = $_POST["email"];
+        $comment = $_POST["comment"];
+        $date = date('F d Y');
+        $reply_id = $_POST["reply_id"];
+
+        $query = "INSERT INTO myguests VALUES('', '$name', '$email', '$comment', '$reply_id')";
+        // $query = "INSERT INTO tb_data (name, email, comment, date, reply_id) VALUES('$name', '$email', '$comment', '$date', '$reply_id')";
+
+        // mysqli_query($conn, $query);
+
+    }
+    ?>
+    
 <head>
     <link rel="stylesheet" href="./assets/css/style.css">
     <meta charset="UTF-8">
@@ -51,21 +72,42 @@ if(!empty($_POST)){
 </body>
 </html>
 
+<form action = "" method = "post">
+        <h3 id = "title">Leave a comment </h3>
+        <input type="hidden" name = "reply_id" id= "reply_id">
+        <div>
+            <input type="text" name = "name" placeholder= "Your name" required>
+        </div>
+        <div>
+            <input type="text" name = "email" placeholder= "Your email" required>
+        </div>
+
+        <div>
+            <textarea name="comment"  placeholder="Your comment" required cols="30" rows="10"></textarea>
+        </div>
+        <div>
+            <button type="submit" name= "submit" class= "submit">Submit</button>
+        </div>
+
+
+    </form>
+
+
+
+<h2>Comments:</h2>
+
 <?php
-$sql = "SELECT id, firstname, lastname FROM MyGuests";
-$result = $conn->query($sql);
+//only select comment, not included reply 
+    $datas = mysqli_query($conn, "SELECT * FROM myguests");
+    foreach($datas as $data){
+        require 'comment.php';
+    }
+?>
 
-if ($result->num_rows > 0) {
-    // hier komt de code als er gegevens zijn
-} else {
-    echo "0 results";
-}
 
-while ($row = $result->fetch_assoc()) {
-    // hier komen de gegevens van elke rij (record)
-    echo $row["firstname"]. " " . $row["lastname"]. ":". "<br>";
-}
 
-$conn->close();
+</html>
+
+<?php
 $con->close();
 ?>
